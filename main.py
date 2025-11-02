@@ -1,7 +1,13 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-
+from src.textSummarizer.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
 from src.textSummarizer.logging import logger
 
-logger.info("Starting the text summarization process.")
+STAGE_NAME = "Data Ingestion Stage"
+
+try:
+    logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+    data_ingestion = DataIngestionTrainingPipeline()
+    data_ingestion.main()
+    logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+    logger.exception(e)
+    raise e
