@@ -1,6 +1,9 @@
 from src.textSummarizer.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from src.textSummarizer.utils.common import read_yaml, create_directories
 from src.textSummarizer.entity import DataIngestionConfig
+from src.textSummarizer.entity import DataValidationConfig
+from pathlib import Path
+
 class ConfigurationManager:
     def __init__(
         self,
@@ -27,3 +30,17 @@ class ConfigurationManager:
         )
 
         return data_ingestion_config
+
+    def get_data_validation_config(self) -> DataValidationConfig:
+        config = self.config.data_validation
+
+        create_directories([config.root_dir])
+
+        # Map YAML keys (STATUS_FILE, ALL_REQUIRED_FILES) to dataclass fields
+        data_validation_config = DataValidationConfig(
+            root_dir=Path(config.root_dir),
+            status_file_path=Path(config.STATUS_FILE) if hasattr(config, 'STATUS_FILE') else Path(config.status_file_path),
+            all_files_present=list(config.ALL_REQUIRED_FILES) if hasattr(config, 'ALL_REQUIRED_FILES') else list(config.all_files_present)
+        )
+
+        return data_validation_config
